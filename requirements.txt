@@ -1,5 +1,5 @@
 google-generativeai
-fastapi
+google-genai
+fastapi[standard]
 uvicorn
 python-dotenv
-google-genai
