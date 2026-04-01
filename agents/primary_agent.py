@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from agents.task_agent import run_task_agent
 from agents.calendar_agent import run_calendar_agent
 from agents.notes_agent import run_notes_agent
+from agents.weather_agent import run_weather_agent
 
 load_dotenv(dotenv_path="env")
 
@@ -16,6 +17,7 @@ SYSTEM_PROMPT = """You are a coordinator AI. Read the user message and reply wit
 - TASK      if the user wants to add, list, or complete tasks
 - CALENDAR  if the user wants to schedule or view events
 - NOTES     if the user wants to save or view notes
+- WEATHER   if the user asks about weather
 - UNKNOWN   if none of the above"""
 
 def classify_intent(user_message):
@@ -24,7 +26,7 @@ def classify_intent(user_message):
         contents=f"{SYSTEM_PROMPT}\n\nUser message: {user_message}"
     )
     intent = response.text.strip().upper()
-    if intent not in ["TASK", "CALENDAR", "NOTES"]:
+    if intent not in ["TASK", "CALENDAR", "NOTES", "WEATHER"]:
         return "UNKNOWN"
     return intent
 
@@ -38,8 +40,10 @@ def run_primary_agent(user_message):
         result = run_calendar_agent(user_message)
     elif intent == "NOTES":
         result = run_notes_agent(user_message)
+    elif intent == "WEATHER":
+        result = run_weather_agent(user_message)
     else:
-        result = "I'm not sure. Try: 'Add task X', 'Schedule event on date', 'Save note: Title | Content'"
+        result = "I can help with tasks, calendar, notes and weather! Try: 'Add task X', 'Schedule event on date', 'Save note: Title | Content', 'Weather in Mumbai'"
     print(f"Assistant: {result}")
     return result
 
